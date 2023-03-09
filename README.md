@@ -7,7 +7,7 @@ Built upon [djhohnstein's SharpShares](https://github.com/djhohnstein/SharpShare
 > .\SharpShares.exe help
 
 Usage:
-    SharpShares.exe /threads:50 /ldap:servers /ou:"OU=Special Servers,DC=example,DC=local" /filter:SYSVOL,NETLOGON,IPC$,PRINT$ /verbose /outfile:C:\path\to\file.txt
+    SharpShares.exe /threads:50 /ldap:servers /ou:"OU=Special Servers,DC=example,DC=local" /filter:SYSVOL,NETLOGON,IPC$,PRINT$ /verbose /outfile:C:\path\to\file.txt /date:133182233030000000
 
 Optional Arguments:
     /threads  - specify maximum number of parallel threads  (default=25)
@@ -26,6 +26,7 @@ Optional Arguments:
                 default: SYSVOL,NETLOGON,IPC$,PRINT$
     /outfile  - specify file for shares to be appended to instead of printing to std out
     /verbose  - return unauthorized shares
+    /date     - specify the 18-digit LDAP timestamps
 ```
 
 ## Execute Assembly

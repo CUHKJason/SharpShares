@@ -12,36 +12,40 @@ namespace SharpShares.Utilities
         {
             try
             {
-                bool searchGlobalCatalog = true;
+                bool searchGlobalCatalog = false;
                 List<string> ComputerNames = new List<string>();
                 string description = null;
                 string filter = null;
-
+                string pwdLastSet = "";
+                if (!String.IsNullOrEmpty(arguments.date)) 
+                {
+                    pwdLastSet = "(pwdLastSet>=" + arguments.date + ")";
+                }
                 //https://social.technet.microsoft.com/wiki/contents/articles/5392.active-directory-ldap-syntax-filters.aspx
                 //https://ldapwiki.com/wiki/Active%20Directory%20Computer%20Related%20LDAP%20Query
                 switch (arguments.ldap)
                 {
                     case "all":
                         description = "all enabled computers with \"primary\" group \"Domain Computers\"";
-                        filter = ("(&(objectCategory=computer)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))");
+                        filter = ("(&(objectCategory=computer)"+pwdLastSet+"(!(userAccountControl:1.2.840.113556.1.4.803:=2)))");
                         break;
                     case "dc":
                         description = "all enabled Domain Controllers (not read-only DCs)";
-                        filter = ("(&(objectCategory=computer)(!(userAccountControl:1.2.840.113556.1.4.803:=2))(userAccountControl:1.2.840.113556.1.4.803:=8192))");
+                        filter = ("(&(objectCategory=computer)"+pwdLastSet+"(!(userAccountControl:1.2.840.113556.1.4.803:=2))(userAccountControl:1.2.840.113556.1.4.803:=8192))");
                         break;
                     case "exclude-dc":
                         description = "all enabled computers that are not Domain Controllers or read-only DCs";
-                        filter = ("(&(objectCategory=computer)(!(userAccountControl:1.2.840.113556.1.4.803:=2))(!(userAccountControl:1.2.840.113556.1.4.803:=8192))(!(userAccountControl:1.2.840.113556.1.4.803:=67100867)))");
+                        filter = ("(&(objectCategory=computer)"+pwdLastSet+"(!(userAccountControl:1.2.840.113556.1.4.803:=2))(!(userAccountControl:1.2.840.113556.1.4.803:=8192))(!(userAccountControl:1.2.840.113556.1.4.803:=67100867)))");
                         break;
                     case "servers":
                         searchGlobalCatalog = false; //operatingSystem attribute is not replicated in Global Catalog
                         description = "all enabled servers";
-                        filter = ("(&(objectCategory=computer)(!(userAccountControl:1.2.840.113556.1.4.803:=2))(operatingSystem=*server*))");
+                        filter = ("(&(objectCategory=computer)"+pwdLastSet+"(!(userAccountControl:1.2.840.113556.1.4.803:=2))(operatingSystem=*server*))");
                         break;
                     case "servers-exclude-dc":
                         searchGlobalCatalog = false; //operatingSystem attribute is not replicated in Global Catalog
                         description = "all enabled servers excluding Domain Controllers or read-only DCs";
-                        filter = ("(&(objectCategory=computer)(!(userAccountControl:1.2.840.113556.1.4.803:=2))(operatingSystem=*server*)(!(userAccountControl:1.2.840.113556.1.4.803:=8192))(!(userAccountControl:1.2.840.113556.1.4.803:=67100867)))");
+                        filter = ("(&(objectCategory=computer)"+pwdLastSet+"(!(userAccountControl:1.2.840.113556.1.4.803:=2))(operatingSystem=*server*)(!(userAccountControl:1.2.840.113556.1.4.803:=8192))(!(userAccountControl:1.2.840.113556.1.4.803:=67100867)))");
                         break;
                     default:
                         Console.WriteLine("[!] Invalid LDAP filter: {0}", filter);

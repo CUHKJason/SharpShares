@@ -23,6 +23,7 @@ namespace SharpShares.Utilities
             public string ou = null;
             public string outfile = null;
             public string targets = null;
+            public string date = null;
         }
         public static Dictionary<string, string[]> ParseArgs(string[] args)
         {
@@ -95,6 +96,10 @@ namespace SharpShares.Utilities
             {
                 arguments.verbose = Convert.ToBoolean(parsedArgs["/verbose"][0]);
             }
+            if (parsedArgs.ContainsKey("/date"))
+            {
+                arguments.date = parsedArgs["/date"][0];
+            }
             if (parsedArgs.ContainsKey("help"))
             {
                 Usage();
@@ -127,6 +132,7 @@ namespace SharpShares.Utilities
             Console.WriteLine($"\tstealth: {arguments.stealth.ToString()}");
             Console.WriteLine($"\tthreads: {arguments.threads.ToString()}");
             Console.WriteLine($"\tverbose: {arguments.verbose.ToString()}");
+            Console.WriteLine($"\tdate: {arguments.date}");
             if (String.IsNullOrEmpty(arguments.outfile))
             { 
                 Console.WriteLine("\toutfile: none");
@@ -169,7 +175,7 @@ namespace SharpShares.Utilities
 ▄█ █▀█ █▀█ █▀▄ █▀▀ ▄█ █▀█ █▀█ █▀▄ ██▄ ▄█
 
 Usage:
-    SharpShares.exe /threads:50 /ldap:servers /ou:""OU=Special Servers,DC=example,DC=local"" /filter:SYSVOL,NETLOGON,IPC$,PRINT$ /verbose /outfile:C:\path\to\file.txt
+    SharpShares.exe /threads:50 /ldap:servers /ou:""OU=Special Servers,DC=example,DC=local"" /filter:SYSVOL,NETLOGON,IPC$,PRINT$ /verbose /outfile:C:\path\to\file.txt /date:133182233030000000
 
 Optional Arguments:
     /threads  - specify maximum number of parallel threads  (default=25)
@@ -188,6 +194,7 @@ Optional Arguments:
                 default: SYSVOL,NETLOGON,IPC$,PRINT$
     /outfile  - specify file for shares to be appended to instead of printing to std out 
     /verbose  - return unauthorized shares
+    /date     - specify the 18-digit LDAP timestamps
 ";
             Console.WriteLine(usageString);
         }
